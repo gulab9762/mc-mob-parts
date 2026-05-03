@@ -17,32 +17,20 @@ import net.gbdhapa.block.ModBlocks;
 public class ModRegistry {
 
     public static void register() {
-        registerItem("zombie_hand", ModItems.ZOMBIE_HAND);
-        registerItem("zombie_foot", ModItems.ZOMBIE_FOOT);
-        registerItem("zombie_leg", ModItems.ZOMBIE_LEG);
-        registerItem("zombie_torso", ModItems.ZOMBIE_TORSO);
-        
-        registerItem("skeleton_hand", ModItems.SKELETON_HAND);
-        registerItem("skeleton_foot", ModItems.SKELETON_FOOT);
-        registerItem("skeleton_leg", ModItems.SKELETON_LEG);
-        registerItem("skeleton_torso", ModItems.SKELETON_TORSO);
-
-        registerBlock("statue_pedestal", ModBlocks.STATUE_PEDESTAL);
+        ModItems.registerAll(ModRegistry::registerItem);
+        ModBlocks.registerAll(ModRegistry::registerBlock);
 
         // Creative Tab Integration for 26.1 (Tiny Takeover)
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(output -> {
-            output.accept(ModItems.ZOMBIE_HAND);
-            output.accept(ModItems.ZOMBIE_FOOT);
-            output.accept(ModItems.ZOMBIE_LEG);
-            output.accept(ModItems.ZOMBIE_TORSO);
-            output.accept(ModItems.SKELETON_HAND);
-            output.accept(ModItems.SKELETON_FOOT);
-            output.accept(ModItems.SKELETON_LEG);
-            output.accept(ModItems.SKELETON_TORSO);
+            ModItems.registerAll((name, item) -> output.accept(item));
         });
 
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(output -> {
-            output.accept(ModBlocks.STATUE_PEDESTAL);
+            ModBlocks.registerAll((name, block) -> {
+                // Find the block item from registries
+                Identifier id = Mobparts.id(name);
+                BuiltInRegistries.ITEM.get(id).ifPresent(ref -> output.accept(ref.value()));
+            });
         });
     }
 

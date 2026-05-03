@@ -7,6 +7,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.registries.Registries;
 import net.gbdhapa.Mobparts;
 
+import java.util.function.BiConsumer;
+
 public class ModBlocks {
     public static final Block STATUE_PEDESTAL = register("statue_pedestal", 
         BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).strength(2.0f));
@@ -14,5 +16,9 @@ public class ModBlocks {
     private static Block register(String name, BlockBehaviour.Properties properties) {
         ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, Mobparts.id(name));
         return new Block(properties.setId(key));
+    }
+
+    public static void registerAll(BiConsumer<String, Block> registerer) {
+        registerer.accept("statue_pedestal", STATUE_PEDESTAL);
     }
 }
