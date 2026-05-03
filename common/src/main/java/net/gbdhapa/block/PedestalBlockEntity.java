@@ -2,7 +2,6 @@ package net.gbdhapa.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.ValueInput;
@@ -14,45 +13,67 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PedestalBlockEntity extends BlockEntity {
-    private ItemStack displayedItem = ItemStack.EMPTY;
+    private final Map<String, ItemStack> parts = new HashMap<>();
 
     public PedestalBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.PEDESTAL_BLOCK_ENTITY, pos, state);
     }
 
-    public ItemStack getDisplayedItem() {
-        return displayedItem;
+    public Map<String, ItemStack> getParts() {
+        return parts;
     }
 
-    public void setDisplayedItem(ItemStack stack) {
-        this.displayedItem = stack.copy();
+    public void setPart(String type, ItemStack stack) {
+        if (stack.isEmpty()) {
+            parts.remove(type);
+        } else {
+            parts.put(type, stack.copy());
+        }
         setChanged();
     }
 
-    public boolean hasDisplayedItem() {
-        return !displayedItem.isEmpty();
+    public ItemStack getPart(String type) {
+        return parts.getOrDefault(type, ItemStack.EMPTY);
     }
 
-    public ItemStack removeDisplayedItem() {
-        ItemStack removed = displayedItem.copy();
-        displayedItem = ItemStack.EMPTY;
-        setChanged();
-        return removed;
+    public boolean hasPart(String type) {
+        return parts.containsKey(type) && !parts.get(type).isEmpty();
+    }
+
+    public ItemStack removeLastPart() {
+        String[] order = {"hands", "torso", "legs", "feet"};
+        for (String type : order) {
+            if (hasPart(type)) {
+                ItemStack removed = parts.remove(type);
+                setChanged();
+                return removed;
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        if (!displayedItem.isEmpty()) {
-            output.store("displayed_item", ItemStack.CODEC, displayedItem);
-        }
+        parts.forEach((type, stack) -> {
+            if (!stack.isEmpty()) {
+                output.store("part_" + type, ItemStack.CODEC, stack);
+            }
+        });
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        displayedItem = input.read("displayed_item", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        String[] types = {"feet", "legs", "torso", "hands"};
+        parts.clear();
+        for (String type : types) {
+            input.read("part_" + type, ItemStack.CODEC).ifPresent(stack -> parts.put(type, stack));
+        }
     }
 
     @Nullable

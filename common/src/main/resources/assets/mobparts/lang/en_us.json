@@ -1,11 +1,20 @@
 {
   "item.mobparts.zombie_hand": "Zombie Hand",
+  "block.mobparts.zombie_hand": "Zombie Hand",
   "item.mobparts.zombie_foot": "Zombie Foot",
+  "block.mobparts.zombie_foot": "Zombie Foot",
   "item.mobparts.zombie_leg": "Zombie Leg",
+  "block.mobparts.zombie_leg": "Zombie Leg",
   "item.mobparts.zombie_torso": "Zombie Torso",
+  "block.mobparts.zombie_torso": "Zombie Torso",
   "item.mobparts.skeleton_hand": "Skeleton Hand",
+  "block.mobparts.skeleton_hand": "Skeleton Hand",
   "item.mobparts.skeleton_foot": "Skeleton Foot",
+  "block.mobparts.skeleton_foot": "Skeleton Foot",
   "item.mobparts.skeleton_leg": "Skeleton Leg",
+  "block.mobparts.skeleton_leg": "Skeleton Leg",
   "item.mobparts.skeleton_torso": "Skeleton Torso",
+  "block.mobparts.skeleton_torso": "Skeleton Torso",
+  "item.mobparts.statue_pedestal": "Statue Pedestal",
   "block.mobparts.statue_pedestal": "Statue Pedestal"
 }

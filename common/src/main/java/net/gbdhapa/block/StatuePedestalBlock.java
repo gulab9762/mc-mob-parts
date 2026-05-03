@@ -13,7 +13,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -89,10 +88,15 @@ public class StatuePedestalBlock extends BaseEntityBlock {
                 level.levelEvent(player, 2001, otherPos, Block.getId(otherState));
             }
 
-            // Drop the displayed item if the lower block is destroyed
+            // Drop all displayed items if the lower block is destroyed
             BlockPos lowerPos = half == DoubleBlockHalf.LOWER ? pos : pos.below();
-            if (level.getBlockEntity(lowerPos) instanceof PedestalBlockEntity pedestal && pedestal.hasDisplayedItem()) {
-                Block.popResource(level, lowerPos, pedestal.removeDisplayedItem());
+            if (level.getBlockEntity(lowerPos) instanceof PedestalBlockEntity pedestal) {
+                pedestal.getParts().values().forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        Block.popResource(level, lowerPos, stack);
+                    }
+                });
+                pedestal.getParts().clear();
             }
         }
         return super.playerWillDestroy(level, pos, state, player);
@@ -101,7 +105,6 @@ public class StatuePedestalBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        // Only the bottom half has the BlockEntity
         if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
             return new PedestalBlockEntity(pos, state);
         }
@@ -111,7 +114,6 @@ public class StatuePedestalBlock extends BaseEntityBlock {
     @Override
     protected InteractionResult useItemOn(ItemStack heldStack, BlockState state, Level level, BlockPos pos,
                                           Player player, InteractionHand hand, BlockHitResult hit) {
-        // Get the lower block position (where the BlockEntity lives)
         BlockPos lowerPos = state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos : pos.below();
 
         if (!(level.getBlockEntity(lowerPos) instanceof PedestalBlockEntity pedestal)) {
@@ -119,25 +121,40 @@ public class StatuePedestalBlock extends BaseEntityBlock {
         }
 
         if (!level.isClientSide()) {
-            if (!heldStack.isEmpty() && !pedestal.hasDisplayedItem()) {
-                // Place item on pedestal
-                ItemStack toPlace = heldStack.copyWithCount(1);
-                pedestal.setDisplayedItem(toPlace);
+            String partType = getPartType(heldStack);
+            
+            if (partType != null && !pedestal.hasPart(partType)) {
+                // Place specific part
+                pedestal.setPart(partType, heldStack.copyWithCount(1));
                 if (!player.isCreative()) {
                     heldStack.shrink(1);
                 }
-                // Sync to client
                 level.sendBlockUpdated(lowerPos, level.getBlockState(lowerPos), level.getBlockState(lowerPos), 3);
-            } else if (pedestal.hasDisplayedItem()) {
-                // Remove item from pedestal and give back to player
-                ItemStack removed = pedestal.removeDisplayedItem();
-                if (!player.addItem(removed)) {
-                    Block.popResource(level, pos, removed);
+                return InteractionResult.SUCCESS;
+            } else if (heldStack.isEmpty()) {
+                // Remove last added part
+                ItemStack removed = pedestal.removeLastPart();
+                if (!removed.isEmpty()) {
+                    if (!player.addItem(removed)) {
+                        Block.popResource(level, pos, removed);
+                    }
+                    level.sendBlockUpdated(lowerPos, level.getBlockState(lowerPos), level.getBlockState(lowerPos), 3);
+                    return InteractionResult.SUCCESS;
                 }
-                level.sendBlockUpdated(lowerPos, level.getBlockState(lowerPos), level.getBlockState(lowerPos), 3);
             }
         }
-        return InteractionResult.SUCCESS;
+        
+        // Return SUCCESS if we did something, otherwise PASS
+        return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.PASS;
+    }
+
+    @Nullable
+    private String getPartType(ItemStack stack) {
+        if (stack.is(ModBlocks.ZOMBIE_FOOT.asItem()) || stack.is(ModBlocks.SKELETON_FOOT.asItem())) return "feet";
+        if (stack.is(ModBlocks.ZOMBIE_LEG.asItem()) || stack.is(ModBlocks.SKELETON_LEG.asItem())) return "legs";
+        if (stack.is(ModBlocks.ZOMBIE_TORSO.asItem()) || stack.is(ModBlocks.SKELETON_TORSO.asItem())) return "torso";
+        if (stack.is(ModBlocks.ZOMBIE_HAND.asItem()) || stack.is(ModBlocks.SKELETON_HAND.asItem())) return "hands";
+        return null;
     }
 
     @Override

@@ -17,18 +17,28 @@ public class ModBlocks {
             .setId(ResourceKey.create(Registries.BLOCK, Mobparts.id("statue_pedestal")))));
 
     // Decorative Mob Part Blocks
-    public static final Block ZOMBIE_HAND = register("zombie_hand", BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD));
-    public static final Block ZOMBIE_FOOT = register("zombie_foot", BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD));
-    public static final Block ZOMBIE_LEG = register("zombie_leg", BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD));
-    public static final Block ZOMBIE_TORSO = register("zombie_torso", BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD));
+    public static final Block ZOMBIE_HAND = register("zombie_hand", mobPartProps());
+    public static final Block ZOMBIE_FOOT = register("zombie_foot", mobPartProps());
+    public static final Block ZOMBIE_LEG = register("zombie_leg", mobPartProps());
+    public static final Block ZOMBIE_TORSO = register("zombie_torso", mobPartProps());
 
-    public static final Block SKELETON_HAND = register("skeleton_hand", BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD));
-    public static final Block SKELETON_FOOT = register("skeleton_foot", BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD));
-    public static final Block SKELETON_LEG = register("skeleton_leg", BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD));
-    public static final Block SKELETON_TORSO = register("skeleton_torso", BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD));
+    public static final Block SKELETON_HAND = register("skeleton_hand", mobPartProps());
+    public static final Block SKELETON_FOOT = register("skeleton_foot", mobPartProps());
+    public static final Block SKELETON_LEG = register("skeleton_leg", mobPartProps());
+    public static final Block SKELETON_TORSO = register("skeleton_torso", mobPartProps());
+
+    private static BlockBehaviour.Properties mobPartProps() {
+        return BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD)
+            .noOcclusion()
+            .isSuffocating((state, level, pos) -> false)
+            .isRedstoneConductor((state, level, pos) -> false);
+    }
 
     private static Block register(String name, BlockBehaviour.Properties properties) {
         ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, Mobparts.id(name));
+        if (name.contains("hand") || name.contains("foot") || name.contains("leg") || name.contains("torso")) {
+            return new DecorativeMobPartBlock(properties.setId(key));
+        }
         return new Block(properties.setId(key));
     }
 
