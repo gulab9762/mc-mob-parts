@@ -1,0 +1,66 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "iron": "minecraft:block/iron_block",
+    "particle": "minecraft:block/iron_block"
+  },
+  "elements": [
+    {
+      "name": "base_slab",
+      "from": [0, 0, 0],
+      "to": [16, 4, 16],
+      "faces": {
+        "north": {"uv": [0, 12, 16, 16], "texture": "#iron"},
+        "south": {"uv": [0, 12, 16, 16], "texture": "#iron"},
+        "east":  {"uv": [0, 12, 16, 16], "texture": "#iron"},
+        "west":  {"uv": [0, 12, 16, 16], "texture": "#iron"},
+        "up":    {"uv": [0, 0, 16, 16], "texture": "#iron"},
+        "down":  {"uv": [0, 0, 16, 16], "texture": "#iron", "cullface": "down"}
+      }
+    },
+    {
+      "name": "pillar_nw",
+      "from": [0, 4, 0],
+      "to": [2, 16, 2],
+      "faces": {
+        "north": {"uv": [14, 0, 16, 12], "texture": "#iron"},
+        "south": {"uv": [0, 0, 2, 12], "texture": "#iron"},
+        "east":  {"uv": [14, 0, 16, 12], "texture": "#iron"},
+        "west":  {"uv": [0, 0, 2, 12], "texture": "#iron"}
+      }
+    },
+    {
+      "name": "pillar_ne",
+      "from": [14, 4, 0],
+      "to": [16, 16, 2],
+      "faces": {
+        "north": {"uv": [0, 0, 2, 12], "texture": "#iron"},
+        "south": {"uv": [14, 0, 16, 12], "texture": "#iron"},
+        "east":  {"uv": [0, 0, 2, 12], "texture": "#iron"},
+        "west":  {"uv": [14, 0, 16, 12], "texture": "#iron"}
+      }
+    },
+    {
+      "name": "pillar_sw",
+      "from": [0, 4, 14],
+      "to": [2, 16, 16],
+      "faces": {
+        "north": {"uv": [14, 0, 16, 12], "texture": "#iron"},
+        "south": {"uv": [0, 0, 2, 12], "texture": "#iron"},
+        "east":  {"uv": [0, 0, 2, 12], "texture": "#iron"},
+        "west":  {"uv": [14, 0, 16, 12], "texture": "#iron"}
+      }
+    },
+    {
+      "name": "pillar_se",
+      "from": [14, 4, 14],
+      "to": [16, 16, 16],
+      "faces": {
+        "north": {"uv": [0, 0, 2, 12], "texture": "#iron"},
+        "south": {"uv": [14, 0, 16, 12], "texture": "#iron"},
+        "east":  {"uv": [14, 0, 16, 12], "texture": "#iron"},
+        "west":  {"uv": [0, 0, 2, 12], "texture": "#iron"}
+      }
+    }
+  ]
+}

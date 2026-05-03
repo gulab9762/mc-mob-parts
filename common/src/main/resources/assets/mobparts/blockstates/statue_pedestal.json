@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "half=lower": { "model": "mobparts:block/statue_pedestal_bottom" },
+    "half=upper": { "model": "mobparts:block/statue_pedestal_top" }
+  }
+}
