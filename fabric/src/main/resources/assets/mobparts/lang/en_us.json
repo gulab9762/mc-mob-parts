@@ -1,0 +1,11 @@
+{
+  "item.mob_parts.zombie_hand": "Zombie Hand",
+  "item.mob_parts.zombie_foot": "Zombie Foot",
+  "item.mob_parts.zombie_leg": "Zombie Leg",
+  "item.mob_parts.zombie_torso": "Zombie Torso",
+  "item.mob_parts.skeleton_hand": "Skeleton Hand",
+  "item.mob_parts.skeleton_foot": "Skeleton Foot",
+  "item.mob_parts.skeleton_leg": "Skeleton Leg",
+  "item.mob_parts.skeleton_torso": "Skeleton Torso",
+  "block.mob_parts.statue_pedestal": "Statue Pedestal"
+}

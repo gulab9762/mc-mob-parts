@@ -1,0 +1,16 @@
+plugins {
+	id 'net.fabricmc.fabric-loom'
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	
+	compileOnly "net.fabricmc:fabric-loader:${project.loader_version}"
+}
+
+// Ensure common code is available to other subprojects
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.name}" }
+	}
+}

@@ -1,0 +1,27 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}" apply false
+	id 'maven-publish'
+}
+
+subprojects {
+	apply plugin: 'maven-publish'
+	apply plugin: 'java-library'
+
+	version = project.mod_version
+	group = project.maven_group
+
+	// tasks.withType(JavaCompile).configureEach {
+	// 	it.options.release = 25
+	// }
+
+	java {
+		withSourcesJar()
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(25)
+		}
+	}
+
+	repositories {
+		mavenCentral()
+	}
+}
