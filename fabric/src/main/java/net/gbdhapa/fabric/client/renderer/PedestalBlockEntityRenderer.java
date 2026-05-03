@@ -62,24 +62,24 @@ public class PedestalBlockEntityRenderer implements BlockEntityRenderer<Pedestal
 
     @Override
     public void submit(PedestalRenderState state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState camera) {
-        // Feet
+        // Feet - positioned at the bottom inside the pedestal base
         if (state.hasFeet) {
-            renderDual(state.feetState, state, poses, collector, 0.2, 0.2);
+            renderDual(state.feetState, state, poses, collector, 0.25, 0.15);
         }
         
-        // Legs
+        // Legs - positioned above feet
         if (state.hasLegs) {
-            renderDual(state.legsState, state, poses, collector, 0.5, 0.2);
+            renderDual(state.legsState, state, poses, collector, 0.45, 0.15);
         }
         
-        // Torso
+        // Torso - centered in the middle of the pedestal
         if (state.hasTorso) {
-            renderSingle(state.torsoState, state, poses, collector, 1.0);
+            renderSingle(state.torsoState, state, poses, collector, 0.7);
         }
         
-        // Hands
+        // Hands - positioned at torso height but offset to the sides
         if (state.hasHands) {
-            renderDual(state.handsState, state, poses, collector, 1.0, 0.25);
+            renderDual(state.handsState, state, poses, collector, 0.7, 0.35);
         }
     }
 
